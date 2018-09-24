@@ -2,22 +2,22 @@
 
 class SimpleCMS {
   public function __construct(){
-    $this->conn = new mysqli("localhost", "root", "","test");
+    $this->conn = new mysqli("localhost", "root", "","test"); // create conn variable to be used whenever connecting to database
     if ($this->conn->connect_errno) {
-      die("Failed to connect to MySQL: (" . $this->conn->connect_errno . ") " . $this->conn->connect_error);
+      die("Failed to connect to MySQL: (" . $this->conn->connect_errno . ") " . $this->conn->connect_error); // error handling (database connection errror)
     }
-    $this->setup();
+    $this->setup(); // call setup function
   }
 
   public function displayPublic() {
-    $q = "SELECT * FROM posts ORDER BY created DESC";
-    $r = $this->conn->query($q);
+    $q = "SELECT * FROM posts ORDER BY created DESC"; // $q holds the query to select all columns in database and order descending
+    $r = $this->conn->query($q); // $r holds the results of query $q 
 
-    if ($r && $r->num_rows > 0) {
+    if ($r && $r->num_rows > 0) { // if table has contents
       $html = '<table border="1">';
-      while ($row = $r->fetch_assoc()) {
-        $title = stripslashes($row['title']);
-        $bodytext = stripslashes($row['bodytext']);
+      while ($row = $r->fetch_assoc()) { // $row stores data from table as an assoc array
+        $title = stripslashes($row['title']); 
+        $bodytext = stripslashes($row['bodytext']); 
 
         $html .= <<<ENTRY_DISPLAY
           <tr class="post">
@@ -94,16 +94,16 @@ ADMIN_FORM;
 
   
 
-  private function setup() {
-    $sql = <<<OYBLIN
-      CREATE TABLE IF NOT EXISTS posts (
+  private function setup() {  //setup function sets up sql query to create table in database
+    $sql = <<<SQL_QUERY
+      CREATE TABLE IF NOT EXISTS posts ( 
         title		VARCHAR(150),
         bodytext	TEXT,
         created		VARCHAR(100)
       )
-OYBLIN;
+SQL_QUERY;
 
-    return $this->conn->query($sql);
+    return $this->conn->query($sql); //connect to database and pass query
   }
 
 }
